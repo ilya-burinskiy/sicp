@@ -6,8 +6,12 @@
          mul-rat div-rat equal-rat? print-rat)
 
 (define (make-rat n d)
-  (let ((g (gcd n d)))
-    (cons (/ n g) (/ d g))))
+  (let ((normalize-sign? (or (and (< n 0) (< d 0))
+                             (and (> n 0) (< d 0)))))
+    (let ((n (if normalize-sign? (* n (- 1)) n))
+          (d (if normalize-sign? (* d (- 1)) d)))
+      (let ((g (abs (gcd n d))))
+        (cons (/ n g) (/ d g))))))
 
 (define (numer x) (car x))
 

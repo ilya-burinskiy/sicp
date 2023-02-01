@@ -1,0 +1,23 @@
+(define (cons x y)
+  (lambda (m) (m x y)))
+
+(define (car z)
+  (z (lambda (p q) p)))
+
+(define (cdr z)
+  (z (lambda (p q) q)))
+
+cons 1 2
+(\m -> m 1 2)
+
+car (cons 1 2)
+car (\m -> m 1 2)
+(\m -> m 1 2) (\p q -> p)
+(\p q -> p) 1 2
+1
+
+cdr (cons 1 2)
+cdr (\m -> m 1 2)
+(\m -> m 1 2) (\p q -> q)
+(\p q -> q) 1 2
+2

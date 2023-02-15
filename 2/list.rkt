@@ -21,3 +21,10 @@
                                 (cons (reverse-list-helper (car lst) null) res)))
           (else (reverse-list-helper (cdr lst) (cons (car lst) res)))))
   (reverse-list-helper lst null))
+
+(define (fringe lst)
+  (if (null? lst)
+      (list)
+      (if (pair? (car lst))
+          (append (fringe (car lst)) (fringe (cdr lst)))
+          (cons (car lst) (fringe (cdr lst))))))

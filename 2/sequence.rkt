@@ -1,5 +1,7 @@
 #lang racket
 
+(provide filter accumulate map append length)
+
 (define (filter predicate sequence)
   (cond ((null? sequence) null)
         ((predicate (car sequence))

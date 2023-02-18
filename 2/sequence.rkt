@@ -1,6 +1,6 @@
 #lang racket
 
-(provide filter accumulate map append length)
+(provide filter accumulate append length)
 
 (define (filter predicate sequence)
   (cond ((null? sequence) null)
@@ -14,6 +14,12 @@
       initial
       (op (car sequence)
           (accumulate op initial (cdr sequence)))))
+
+(define (accumulate-n op init seqs)
+  (if (null? (car seqs))
+      null
+      (cons (accumulate op init (map car seqs))
+            (accumulate-n op init (map cdr seqs)))))
 
 (define (map p sequence)
   (accumulate (lambda (x y) (cons (p x) y)) null sequence))

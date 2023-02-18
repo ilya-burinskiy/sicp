@@ -1,6 +1,6 @@
 #lang racket
 
-(provide last-pair reverse-list)
+(provide last-pair reverse-list fringe)
 
 (define (last-pair lst)
   (cond ((= (cdr lst) null) (car lst))

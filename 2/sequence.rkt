@@ -1,6 +1,6 @@
 #lang racket
 
-(provide filter accumulate append length)
+(provide filter accumulate accumulate-n append length)
 
 (define (filter predicate sequence)
   (cond ((null? sequence) null)

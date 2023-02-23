@@ -1,6 +1,7 @@
 #lang racket
 
-(provide filter accumulate fold-right fold-left accumulate-n append length)
+(provide filter accumulate fold-right fold-left accumulate-n append length
+         flatmap)
 
 (define (filter predicate sequence)
   (cond ((null? sequence) null)
@@ -40,3 +41,6 @@
 
 (define (length sequence)
   (accumulate (lambda (sequence-val count) (+ count 1)) 0 sequence))
+
+(define (flatmap proc sequence)
+  (accumulate append null (map proc sequence)))

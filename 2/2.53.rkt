@@ -1,0 +1,23 @@
+#lang racket
+
+(define (memq item sequence)
+  (cond ((null? sequence) false)
+        ((eq? item (car sequence)) sequence)
+        (else (memq item (cdr sequence)))))
+
+(list 'a 'b 'c)
+; > '(a b c) +
+(list (list 'george))
+; > '((george)) +
+(cdr '((x1 x2) (y1 y2)))
+; > '((y1 y2)) +
+(cadr '((x1 x2) (y1 y2)))
+; > 'y1 -
+; > '(y1 y2)
+(pair? (car '(a short list)))
+; > #f
+(memq 'red '((red shoes) (blue socks)))
+; > #f
+(memq 'red '(red shoes blue socks))
+; > #t -
+; > '(red shoes blue socks)

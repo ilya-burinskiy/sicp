@@ -49,13 +49,19 @@
 
 (define (addend sum) (cadr sum))
 
-(define (augend sum) (caddr sum))
+(define (augend sum)
+  (cond ((= (length sum) 3) (caddr sum)) ; '(+ x1 x2)
+        ((= (length sum) 4) (make-sum (caddr sum) (cadddr sum))) ; '(+ x1 x2 x3)
+        (else (make-sum (caddr sum) (cdddr sum))))) ; '(+ x1 x2 x3 ...)
 
 (define (product? expr) (and (pair? expr) (eq? (car expr) '*)))
 
 (define (multiplier prod) (cadr prod))
 
-(define (multiplicand prod) (caddr prod))
+(define (multiplicand prod)
+  (cond ((= (length prod) 3) (caddr prod)) ; '(* x1 x2)
+        ((= (length prod) 4) (make-product (caddr prod) (cadddr prod))) ; '(* x1 x2 x3)
+        (else (make-product (caddr prod) (cdddr prod))))) ; '(* x1 x2 x2 ...)
 
 (define (exponentiation? expr)
   (and (pair? expr) (eq? (car expr) '**)))

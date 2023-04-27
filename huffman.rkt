@@ -1,5 +1,17 @@
 #lang racket
 
+(define (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+
+(define (successive-merge leafs)
+  (let ((first-leaf (car leafs)))
+    (if (null? (cdr leafs))
+        first-leaf
+        (let ((second-leaf (cadr leafs)))
+          (successive-merge
+            (cons (make-code-tree first-leaf second-leaf)
+                  (cddr leafs)))))))
+
 (define (decode bits tree)
   (define (iter bits current-branch)
     (if (null? bits)

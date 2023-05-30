@@ -1,26 +1,5 @@
 #lang racket
 
-; (define (deriv expr var)
-;   (cond ((number? expr) 0)
-;         ((variable? expr)
-;          (if (same-variable? expr var) 1 0))
-;         ((sum? expr)
-;          (make-sum (deriv (addend expr) var)
-;                    (deriv (augend expr) var)))
-;         ((product? expr)
-;           (make-sum
-;             (make-product (multiplier expr)
-;                           (deriv (multiplicand expr) var))
-;             (make-product (deriv (multiplier expr) var)
-;                           (multiplicand expr))))
-;         ((exponentiation? expr)
-;          (make-product (make-product (exponent expr)
-;                                      (make-exponentiation (base expr)
-;                                                           (make-sum (exponent expr) -1)))
-;                        (deriv (base expr) var)))
-;         (else
-;           (error "Unknown expression type -- DERIV" expr))))
-
 (define (install-deriv-package)
   (define (sum-deriv operands var)
     (make-sum (deriv (addend operands) var)

@@ -1,5 +1,7 @@
 #lang racket
 
+(require "type-dispatch.rkt")
+
 (define (install-deriv-package)
   (define (sum-deriv operands var)
     (make-sum (deriv (addend operands) var)
@@ -21,6 +23,7 @@
   (put 'deriv '* product-deriv)
   (put 'deriv '** exponent-deriv))
 
+; NOTE: need to call install-deriv-package before deriv call
 (define (deriv expr var)
   (cond [(number? expr) 0]
         [(variable? expr) (if (same-variable? expr var) 1 0)]
@@ -83,35 +86,3 @@
 
 (define (=number? expr num)
   (and (number? expr) (= expr num)))
-
-; TODO: put in a separate module
-
-(define (attach-tag type-tag contents)
-  (cons type-tag contents))
-
-(define (type-tag datum)
-  (if (pair? datum)
-      (car datum)
-      (error "Invalid tagged data" datum)))
-
-(define (contents datum)
-  (if (pair? datum)
-      (cdr datum)
-      (error "Invalid tagged data" datum)))
-
-(define (apply-generic op . args)
-  (let [(type-tags (map type-tag args))]
-    (let [(proc (get op type-tags))]
-      (if proc
-          (apply proc (map contents args))
-          (error
-            "No method fot this types"
-            (list op type-tags))))))
-
-(define op-table (make-hash))
-
-(define (put op type proc)
-  (hash-set! op-table (list op type) proc))
-
-(define (get op type)
-  (hash-ref op-table (list op type) '()))

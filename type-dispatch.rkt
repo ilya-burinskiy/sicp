@@ -3,17 +3,19 @@
 (provide attach-tag type-tag contents apply-generic put get)
 
 (define (attach-tag type-tag contents)
-  (cons type-tag contents))
+  (if (number? contents)
+      contents
+      (cons type-tag contents)))
 
 (define (type-tag datum)
-  (if (pair? datum)
-      (car datum)
-      (error "Invalid tagged data" datum)))
+  (cond [(number? datum) 'scheme-number]
+        [(pair? datum) (car datum)]
+        [else (error "Invalid tagged data" datum)]))
 
 (define (contents datum)
-  (if (pair? datum)
-      (cdr datum)
-      (error "Invalid tagged data" datum)))
+  (cond [(number? datum) datum]
+        [(pair? datum) (cdr datum)]
+        [else (error "Invalid tagged data" datum)]))
 
 (define (apply-generic op . args)
   (let [(type-tags (map type-tag args))]

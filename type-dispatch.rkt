@@ -30,4 +30,4 @@
   (hash-set! op-table (list op type) proc))
 
 (define (get op type)
-  (hash-ref op-table (list op type) '()))
+  (hash-ref op-table (list op type) false))

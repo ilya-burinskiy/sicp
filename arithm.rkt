@@ -3,7 +3,7 @@
 (require "type-dispatch.rkt"
          "complex-number.rkt")
 
-(provide add sub mul div
+(provide add sub mul div =zero?
          install-scheme-number-package
          install-rational-package
          install-complex-package
@@ -17,6 +17,7 @@
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
 (define (equ? x y) (apply-generic 'equ? x y))
+(define (=zero? x) (apply-generic '=zero? x))
 
 (define (install-scheme-number-package)
   (define (tag x)
@@ -31,6 +32,8 @@
        (lambda (x y) (tag (/ x y))))
   (put 'equ? '(scheme-number scheme-number)
        (lambda (x y) (= x y)))
+  (put '=zero? '(scheme-number)
+       (lambda (x) (= x 0)))
   (put 'make 'scheme-number
        (lambda (x) (tag x)))
   'done)
@@ -71,6 +74,8 @@
        (lambda (x y)
          (and (= (numer x) (numer y))
               (= (denom x) (denom y)))))
+  (put '=zero? '(rational)
+       (lambda (x) (= (numer x) 0)))
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
   'done)
@@ -118,6 +123,8 @@
        (lambda (z1 z2) (tag (div-complex z1 z2))))
   (put 'equ? '(complex complex)
        (lambda (z1 z2) (equ-complex? z1 z2)))
+  (put '=zero? '(complex)
+       (lambda (z) (and (= (real-part z) 0) (imag-part z) 0)))
   (put 'make-from-real-imag 'complex
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex

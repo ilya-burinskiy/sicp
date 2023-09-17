@@ -23,8 +23,8 @@
       (if proc
           (apply proc (map contents args))
           (error
-            "No method fot this types"
-            (list op type-tags))))))
+           "No method fot this types"
+           (list op type-tags))))))
 
 (define op-table (make-hash))
 

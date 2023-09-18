@@ -3,13 +3,19 @@
 (require "integer-number/init.rkt"
          "rational-number/init.rkt"
          "real-number/init.rkt"
-         "complex-number/init.rkt")
+         "complex-number/init.rkt"
+         "type-dispatch.rkt")
 
-(provide install-arithm-package)
+(provide add sub mul div equ? =zero?)
 
-(define (install-arithm-package)
-  (install-integer-number-package)
-  (install-rational-package)
-  (install-real-number-package)
-  (install-complex-package)
-  'done)
+(install-integer-number-package)
+(install-rational-package)
+(install-real-number-package)
+(install-complex-package)
+
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
+(define (equ? x y) (apply-generic 'equ? x y))
+(define (=zero? x) (apply-generic '=zero? x))

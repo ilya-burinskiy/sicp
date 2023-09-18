@@ -1,12 +1,15 @@
 #lang racket
 
-(require "scheme-number/init.rkt"
+(require "integer-number/init.rkt"
          "rational-number/init.rkt"
+         "real-number/init.rkt"
          "complex-number/init.rkt")
 
 (provide install-arithm-package)
 
 (define (install-arithm-package)
-  (install-scheme-number-package)
+  (install-integer-number-package)
   (install-rational-package)
-  (install-complex-package))
+  (install-real-number-package)
+  (install-complex-package)
+  'done)

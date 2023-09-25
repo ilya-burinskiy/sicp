@@ -1,13 +1,18 @@
 #lang racket
 
-(require "../../type-dispatch.rkt" "../../math.rkt")
+(require "../type-dispatch.rkt"
+         "../math.rkt")
 
-(provide make-from-real-imag
-         make-from-mag-ang
-         real-part
-         imag-part
-         magnitude
-         angle)
+(provide install-polar-package)
+
+(define (install-polar-package)
+  (put 'make-from-real-imag 'polar make-from-real-imag)
+  (put 'make-from-mag-ang 'polar make-from-mag-ang)
+  (put 'real-part '(polar) real-part)
+  (put 'imag-part '(polar) imag-part)
+  (put 'magnitude '(polar) magnitude)
+  (put 'angle '(polar) angle)
+  'done)
 
 (define (tag x) (attach-tag 'polar x))
 (define (make-from-real-imag x y)

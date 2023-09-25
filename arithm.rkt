@@ -3,10 +3,11 @@
 (require "integer-number/init.rkt"
          "rational-number/init.rkt"
          "real-number/init.rkt"
-         "complex-number/init.rkt"
+         "complex-number/impl.rkt"
          "type-dispatch.rkt")
 
-(provide add sub mul div equ? =zero?)
+(provide (all-from-out "complex-number/impl.rkt")
+         add sub mul div equ? =zero?)
 
 (install-integer-number-package)
 (install-rational-package)

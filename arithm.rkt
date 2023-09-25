@@ -2,13 +2,14 @@
 
 (require "integer-number-impl.rkt"
          "rational-number-impl.rkt"
-         "real-number/init.rkt"
+         "real-number-impl.rkt"
          "complex-number/impl.rkt"
          "type-dispatch.rkt")
 
 (provide (all-from-out "complex-number/impl.rkt")
          (all-from-out "integer-number-impl.rkt")
          (all-from-out "rational-number-impl.rkt")
+         (all-from-out "real-number-impl.rkt")
          add sub mul div equ? =zero?)
 
 (install-integer-number-package)

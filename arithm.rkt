@@ -1,12 +1,13 @@
 #lang racket
 
-(require "integer-number/init.rkt"
+(require "integer-number-impl.rkt"
          "rational-number/init.rkt"
          "real-number/init.rkt"
          "complex-number/impl.rkt"
          "type-dispatch.rkt")
 
 (provide (all-from-out "complex-number/impl.rkt")
+         (all-from-out "integer-number-impl.rkt")
          add sub mul div equ? =zero?)
 
 (install-integer-number-package)

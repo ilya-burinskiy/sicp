@@ -8,7 +8,7 @@
 (provide (all-from-out "scheme-number-impl.rkt")
          (all-from-out "complex-number/impl.rkt")
          (all-from-out "rational-number-impl.rkt")
-         add sub mul div equ? =zero?)
+         add sub mul div equ? =zero? neg)
 
 (install-scheme-number-package)
 (install-rational-package)
@@ -20,3 +20,4 @@
 (define (div x y) (apply-generic 'div x y))
 (define (equ? x y) (apply-generic 'equ? x y))
 (define (=zero? x) (apply-generic '=zero? x))
+(define (neg x) (apply-generic 'neg x))

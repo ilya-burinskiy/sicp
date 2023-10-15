@@ -13,6 +13,7 @@
   (put 'div '(scheme-number scheme-number) div)
   (put 'equ? '(scheme-number scheme-number) equ?)
   (put '=zero? '(scheme-number) =zero?)
+  (put 'neg '(scheme-number) neg)
   'done)
 
 (define (tag x) (attach-tag 'scheme-number x))
@@ -25,3 +26,4 @@
 (define (div x y) (tag (/ x y)))
 (define (equ? x y) (tag (= x y)))
 (define (=zero? x) (= x 0))
+(define (neg x) (tag (- x)))

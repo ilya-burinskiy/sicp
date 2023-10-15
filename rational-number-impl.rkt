@@ -15,6 +15,7 @@
   (put 'div '(rational rational) div)
   (put 'equ? '(rational rational) equ?)
   (put '=zero? '(rational) =zero?)
+  (put 'neg '(rational) neg)
   'done)
 
 (define (make-rat n d)
@@ -50,3 +51,6 @@
        (= (denom x) (denom y))))
 
 (define (=zero? x) (= (numer x) 0))
+
+(define (neg x)
+  (make-rat (- (numer x)) (denom x)))

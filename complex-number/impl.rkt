@@ -24,6 +24,7 @@
   (put 'div '(complex complex) div)
   (put 'equ? '(complex) equ?)
   (put '=zero? '(complex) =zero?)
+  (put 'neg '(complex) neg)
   'done)
 
 (define (make-complex-from-real-imag x y)
@@ -44,6 +45,7 @@
 (define (imag-part z) (apply-generic 'imag-part z))
 (define (magnitude z) (apply-generic 'magnitude z))
 (define (angle z) (apply-generic 'angle z))
+(define (neg z) (tag (apply-generic 'neg z)))
 
 (define (add z1 z2)
   (make-complex-from-real-imag (+ (real-part z1) (real-part z2))

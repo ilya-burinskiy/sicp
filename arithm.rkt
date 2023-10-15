@@ -1,20 +1,17 @@
 #lang racket
 
-(require "integer-number-impl.rkt"
+(require "scheme-number-impl.rkt"
          "rational-number-impl.rkt"
-         "real-number-impl.rkt"
          "complex-number/impl.rkt"
          "type-dispatch.rkt")
 
-(provide (all-from-out "complex-number/impl.rkt")
-         (all-from-out "integer-number-impl.rkt")
+(provide (all-from-out "scheme-number-impl.rkt")
+         (all-from-out "complex-number/impl.rkt")
          (all-from-out "rational-number-impl.rkt")
-         (all-from-out "real-number-impl.rkt")
          add sub mul div equ? =zero?)
 
-(install-integer-number-package)
+(install-scheme-number-package)
 (install-rational-package)
-(install-real-number-package)
 (install-complex-package)
 
 (define (add x y) (apply-generic 'add x y))

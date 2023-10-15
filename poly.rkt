@@ -25,7 +25,8 @@
   (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
   (put 'make 'polynomial
-       (lambda (var terms) (tag (make-poly var terms)))))
+       (lambda (var terms) (tag (make-poly var terms))))
+  (put '=zero? '(polynomial) =poly-zero?))
 
 (define (add-terms L1 L2)
   (cond [(empty-termlist? L1) L2]
@@ -94,3 +95,12 @@
 
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
+
+(define (=poly-zero? L)
+  (define (iter terms all-zero?)
+    (if (or (empty-termlist? terms) (not all-zero?))
+        all-zero?
+        (let [(term (first-term terms))]
+          (iter (rest-terms terms) (and (=zero? (coeff term)) all-zero?)))))
+  (let [(terms (term-list L))]
+    (iter terms true)))

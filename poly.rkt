@@ -4,6 +4,19 @@
 
 (provide install-polynomial-package make-polynomial)
 
+(define (install-polynomial-package)
+  (define (tag p) (attach-tag 'polynomial p))
+  (put 'add '(polynomial polynomial)
+       (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'sub '(polynomial polynomial)
+       (lambda (p1 p2) (tag (sub-poly p1 p2))))
+  (put 'mul '(polynomial polynomial)
+       (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'make 'polynomial
+       (lambda (var terms) (tag (make-poly var terms))))
+  (put '=zero? '(polynomial) =poly-zero?)
+  (put 'neg '(polynomial) (lambda (p) (tag (neg-poly p)))))
+
 (define (add-poly p1 p2)
   (if (same-variable? (variable p1) (variable p2))
       (make-poly (variable p1)
@@ -11,22 +24,18 @@
                             (term-list p2)))
       (error "Polynomials in different variables" (list p1 p2))))
 
+(define (sub-poly p1 p2)
+  (add-poly p1 (neg-poly p2)))
+
+(define (neg-poly p)
+  (make-poly (variable p) (neg-terms (term-list p))))
+
 (define (mul-poly p1 p2)
   (if (same-variable? (variable p1) (variable p2))
       (make-poly (variable p1)
                  (mul-terms (term-list p1)
                             (term-list p2)))
       (error "Polynomials in different variables" (list p1 p2))))
-
-(define (install-polynomial-package)
-  (define (tag p) (attach-tag 'polynomial p))
-  (put 'add '(polynomial polynomial)
-       (lambda (p1 p2) (tag (add-poly p1 p2))))
-  (put 'mul '(polynomial polynomial)
-       (lambda (p1 p2) (tag (mul-poly p1 p2))))
-  (put 'make 'polynomial
-       (lambda (var terms) (tag (make-poly var terms))))
-  (put '=zero? '(polynomial) =poly-zero?))
 
 (define (add-terms L1 L2)
   (cond [(empty-termlist? L1) L2]
@@ -60,6 +69,9 @@
          (make-term (+ (order t1) (order t2))
                     (mul (coeff t1) (coeff t2)))
          (mul-term-by-all-terms t1 (rest-terms L))))))
+
+(define (neg-terms L)
+  (map (lambda (term) (make-term (order term) (- (coeff term)))) L))
 
 (define (same-variable? v1 v2)
   ; TODO: copy from deriv.rkt

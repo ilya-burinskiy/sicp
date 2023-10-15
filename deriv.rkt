@@ -2,22 +2,24 @@
 
 (require "type-dispatch.rkt")
 
+(provide install-deriv-package deriv)
+
 (define (install-deriv-package)
   (define (sum-deriv operands var)
     (make-sum (deriv (addend operands) var)
               (deriv (augend operands) var)))
   (define (product-deriv operands var)
     (make-sum
-      (make-product (multiplier operands)
-                    (deriv (multiplicand operands) var))
-      (make-product (deriv (multiplier operands) var)
-                    (multiplicand operands))))
+     (make-product (multiplier operands)
+                   (deriv (multiplicand operands) var))
+     (make-product (deriv (multiplier operands) var)
+                   (multiplicand operands))))
   (define (exponent-deriv operands var)
     (make-product
-      (make-product
-        (exponent operands)
-        (make-exponentiation (base operands) (make-sum (exponent operands) -1)))
-      (deriv (base operands) var)))
+     (make-product
+      (exponent operands)
+      (make-exponentiation (base operands) (make-sum (exponent operands) -1)))
+     (deriv (base operands) var)))
 
   (put 'deriv '+ sum-deriv)
   (put 'deriv '* product-deriv)
@@ -57,8 +59,6 @@
         ((and (number? base) (number? exponent)) (expt base exponent))
         (else (list '** base exponent))))
 
-(define (sum? expr) (and (pair? expr) (eq? (car expr) '+)))
-
 (define (addend sum) (car sum))
 
 (define (augend sum-operands)
@@ -67,8 +67,6 @@
     [(= (length sum-operands) 3) (make-sum (cadr sum-operands) (caddr sum-operands))] ; '(x1 x2 x3)
     [else (make-sum (cadr sum-operands) (cddr sum-operands))])) ; '(x1 x2 x3 ...)
 
-(define (product? expr) (and (pair? expr) (eq? (car expr) '*)))
-
 (define (multiplier prod) (car prod))
 
 (define (multiplicand prod-operands)
@@ -76,9 +74,6 @@
     [(= (length prod-operands) 2) (cadr prod-operands)] ; '(x1 x2)
     [(= (length prod-operands) 3) (make-product (cadr prod-operands) (caddr prod-operands))] ; '(x1 x2 x3)
     [else (make-product (cadr prod-operands) (cddr prod-operands))])) ; '(x1 x2 x2 ...)
-
-(define (exponentiation? expr)
-  (and (pair? expr) (eq? (car expr) '**)))
 
 (define (base exponent-operands) (car exponent-operands))
 

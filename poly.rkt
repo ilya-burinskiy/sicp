@@ -17,6 +17,12 @@
        (lambda (p1 p2) (tag (sub-poly p1 p2))))
   (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'div '(polynomial polynomial)
+       (lambda (p1 p2)
+         (let [(div-poly-result (div-poly p1 p2))]
+           (let [(quotient* (car div-poly-result))
+                 (remainder* (cadr div-poly-result))]
+             (list (tag quotient*) (tag remainder*))))))
   (put 'make 'polynomial
        (lambda (var terms) (tag (make-poly var terms))))
   (put '=zero? '(polynomial) =poly-zero?)
@@ -26,7 +32,7 @@
   (if (same-variable? (variable p1) (variable p2))
       (make-poly (variable p1)
                  (add (term-list p1)
-                            (term-list p2)))
+                      (term-list p2)))
       (error "Polynomials in different variables" (list p1 p2))))
 
 (define (sub-poly p1 p2)
@@ -39,7 +45,17 @@
   (if (same-variable? (variable p1) (variable p2))
       (make-poly (variable p1)
                  (mul (term-list p1)
-                            (term-list p2)))
+                      (term-list p2)))
+      (error "Polynomials in different variables" (list p1 p2))))
+
+(define (div-poly p1 p2)
+  (if (same-variable? (variable p1) (variable p2))
+      (let [(div-terms-result (div (term-list p1)
+                                   (term-list p2)))]
+        (let [(quotient* (car div-terms-result))
+              (remainder* (cadr div-terms-result))]
+          (list (make-poly (variable p1) quotient*)
+                (make-poly (variable p1) remainder*))))
       (error "Polynomials in different variables" (list p1 p2))))
 
 (define (same-variable? v1 v2)

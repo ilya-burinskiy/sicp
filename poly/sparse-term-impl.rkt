@@ -12,6 +12,12 @@
        (lambda (L1 L2) (tag (mul-terms L1 L2))))
   (put 'sub '(sparse-term sparse-term)
        (lambda (L1 L2) (tag (sub-terms L1 L2))))
+  (put 'div '(sparse-term sparse-term)
+       (lambda (L1 L2)
+         (let [(div-terms-result (div-terms L1 L2))]
+           (let [(quotient* (car div-terms-result))
+                 (remainder* (cadr div-terms-result))]
+             (list (tag quotient*) (tag remainder*))))))
   (put 'neg '(sparse-term) (lambda (L) (tag (neg-terms L))))
   (put '=zero? '(sparse-term) =zero-term?))
 
@@ -51,6 +57,24 @@
          (make-term (+ (order t1) (order t2))
                     (mul (coeff t1) (coeff t2)))
          (mul-term-by-all-terms t1 (rest-terms L))))))
+
+(define (div-terms L1 L2)
+  (if (empty-termlist? L1)
+      (list (the-empty-term-list) (the-empty-term-list))
+      (let [(t1 (first-term L1))
+            (t2 (first-term L2))]
+        (if (> (order t2) (order t1))
+            (list (the-empty-term-list) L1)
+            (let [(new-c (div (coeff t1) (coeff t2)))
+                  (new-o (- (order t1) (order t2)))]
+              (let [(new-term (make-term new-o new-c))]
+                (let [(rest-of-result
+                       (div-terms
+                        (sub-terms L1 (mul-term-by-all-terms new-term L2))
+                        L2))]
+                  (let [(quotient* (car rest-of-result))
+                        (remainder* (cadr rest-of-result))]
+                    (list (add-terms (list new-term) quotient*) remainder*)))))))))
 
 (define (adjoin-term term term-list)
   (if (=zero? (coeff term))

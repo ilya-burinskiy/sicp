@@ -1,5 +1,12 @@
 #lang racket
 
+(provide list->tree
+         tree->list
+         element-of-set?
+         adjoin-set
+         intersection-set
+         union-set)
+
 (define (element-of-set? x set)
   (cond
     [(null? set) false]

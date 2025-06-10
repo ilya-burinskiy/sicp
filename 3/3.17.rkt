@@ -1,8 +1,15 @@
 #lang racket
 
 (define (count-pairs x)
-  (if (not (pair? x))
-      0
-      (+ (count-pairs (car x))
-         (count-pairs (cdr x))
-         1)))
+  (define seen '())
+  (define (iter x)
+    (if (not (mpair? x))
+        0
+        (if (not (memq x seen))
+            (begin
+              (set! seen (cons x seen))
+              (+ (iter (mcar x))
+                 (iter (mcdr x))
+                 1))
+            0)))
+  (iter x))

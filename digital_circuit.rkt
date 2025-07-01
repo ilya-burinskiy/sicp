@@ -98,3 +98,18 @@
          (and (= s1 0) (= s2 1)))
      1]
     [else (error "Invalid signals" s1 s2)]))
+
+(define (ripple-carry-adder as bs os c-in)
+  (define (iter as bs os c-in)
+    (let ([a (car as)]
+          [b (car bs)]
+          [o (car os)]
+          [as-rest (cdr as)]
+          [bs-rest (cdr bs)]
+          [os-rest (cdr os)])
+      (if (not (null? as-rest))
+          (let ([c-out (make-wire)])
+            (full-adder a b c-in o c-out)
+            (iter as-rest bs-rest os-rest c-out))
+          (full-adder a b c-in o (make-wire)))))
+  (iter as bs os c-in))

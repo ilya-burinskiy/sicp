@@ -1,0 +1,34 @@
+(define (probe name wire)
+  (add-action! wire
+               (lambda ()
+                 (newline)
+                 (display name)
+                 (display " ")
+                 (display (current-time the-agenda))
+                 (display " new-value = ")
+                 (displayln (get-signal wire)))))
+
+; Не забыть поменять реализацию add-action! на
+; (define (add-action! proc) (set! action-procs (cons proc action-procs)))
+(enter! "digital_circuit.rkt")
+(init-agenda)
+(define input-1 (make-wire))
+(define input-2 (make-wire))
+(define sum (make-wire))
+(define carry (make-wire))
+
+(half-adder input-1 input-2 sum carry)
+(set-signal! input-1 1)
+(propagate)
+; sum = 0
+; carry = 0
+; (when (not (and (= (get-signal sum) 1)
+;                 (= (get-signal carry) 0)))
+;       (error "Expected 1 + 0 = (1, 0)"))
+(set-signal! input-2 1)
+; sum = 0
+; carry = 1
+(propagate)
+; (when (not (and (= (get-signal sum) 0)
+;                 (= (get-signal carry) 1)))
+;       (error "Expected 1 + 1 = (0, 1)"))

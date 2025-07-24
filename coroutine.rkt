@@ -1,53 +1,29 @@
 #lang racket
 
-(define *queue* null)
+(require "queue.rkt")
+
+(provide
+  fork
+  coro-end
+  yield
+  run-coros)
+
+(define *queue* (make-queue))
 (define *cc* null)
 
-(define (coro1)
-  (writeln "coro1")
-  (yield)
-  (writeln "coro1 again")
-  (coro-end))
-
-(define (coro2)
-  (writeln "coro2")
-  (yield)
-  (writeln "coro2 again")
-  (coro-end))
-
-(define (coro3)
-  (writeln "coro3")
-  (yield)
-  (yield)
-  (writeln "coro3 again")
-  (coro-end))
-
-(define (enqueue! coro)
-  (set! *queue* (cons coro *queue*)))
-
+(define (fork coro) (insert-queue! *queue* coro))
 (define (coro-end) (*cc* 'done))
-
-(define (yield)
-  (call/cc (lambda (k) (*cc* k))))
+(define (yield) (call/cc (lambda (k) (*cc* k))))
 
 (define (run-coros)
-  (when (not (empty? *queue*))
-    (let* ([coro (car *queue*)]
+  (when (not (empty-queue? *queue*))
+    (let* ([coro (front-queue *queue*)]
            [res (call/cc
                  (lambda (k)
                    (begin
                      (set! *cc* k)
                      (coro))))])
-      (if (procedure? res)
-          (set!
-            *queue*
-            (append
-              (cdr *queue*)
-              (list (lambda () (res null)))))
-          (set! *queue* (cdr *queue*)))
+      (delete-queue! *queue*)
+      (when (procedure? res)
+          (insert-queue! *queue* res))
       (run-coros))))
-
-(enqueue! coro2)
-(enqueue! coro3)
-(enqueue! coro1)
-(run-coros)

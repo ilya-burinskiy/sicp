@@ -113,6 +113,17 @@
   (add-action! a2 or-action-proc)
   'ok)
 
+(define (timer period o)
+  (define (timer-action)
+    (let ([new-val (if (= (get-signal o) 0) 1 0)])
+      (after-delay
+        (+ (current-time the-agenda) period)
+        (lambda ()
+          (set-signal! o new-val)
+          (timer-action)))))
+  (add-action! timer-action)
+  'ok)
+
 ; LOGIC FUNCS
 (define (logical-or s1 s2)
   (cond

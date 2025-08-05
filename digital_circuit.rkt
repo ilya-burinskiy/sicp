@@ -113,6 +113,18 @@
   (add-action! a2 or-action-proc)
   'ok)
 
+(define (nor-gate i1 i2 o)
+  (define (neg-or-action-proc)
+    (let ([new-val (logical-not
+                     (logical-or (get-signal i1)
+                                 (get-signal i2)))])
+      (after-delay
+        (+ or-gate-delay inverter-delay)
+        (lambda ()
+          (set-signal! o new-val)))))
+  (add-action! i1 neg-or-action-proc)
+  (add-action! i2 neg-or-action-proc))
+
 (define (timer period o)
   (define (timer-action)
     (let ([new-val (if (= (get-signal o) 0) 1 0)])

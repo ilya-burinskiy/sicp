@@ -21,6 +21,10 @@
 (define (init-agenda) (set! the-agenda (make-agenda)))
 
 ; CIRCUITS
+(define (rs-latch r s q ~q)
+  (nor-gate q s ~q)
+  (nor-gate r ~q q))
+
 (define (half-adder a b s c)
   (let ([d (make-wire)]
         [e (make-wire)])

@@ -3,17 +3,22 @@
 (require "queue.rkt")
 
 (provide
-  fork
-  coro-end
-  yield
-  run-coros)
+  make-coro
+  coro-yield
+  exec-coros)
 
 (define *queue* (make-queue))
 (define *cc* null)
 
-(define (fork coro) (insert-queue! *queue* coro))
-(define (coro-end) (*cc* 'done))
-(define (yield) (call/cc (lambda (k) (*cc* k))))
+(define (coro-yield) (call/cc (lambda (k) (*cc* k))))
+(define (exec-coros . coros)
+  (define (insert-all! coros)
+    (when (not (null? coros))
+      (begin
+        (insert-queue! *queue* (car coros))
+        (insert-all! (cdr coros)))))
+  (insert-all! coros)
+  (run-coros))
 
 (define (run-coros)
   (when (not (empty-queue? *queue*))
@@ -27,3 +32,9 @@
       (when (procedure? res)
           (insert-queue! *queue* res))
       (run-coros))))
+
+(define-syntax make-coro
+  (syntax-rules ()
+    [(_) (lambda () (*cc* 'done))]
+    [(_ (es ...))
+     (lambda () es ... (*cc* 'done))]))

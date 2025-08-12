@@ -1,6 +1,8 @@
 #lang racket
 
 (require "queue.rkt")
+(require "coroutine.rkt")
+(require racket/trace)
 
 (provide
   make-wire
@@ -80,6 +82,13 @@
 (define (get-signal wire) (wire 'get-signal))
 (define (set-signal! wire new-val) ((wire 'set-signal!) new-val))
 (define (add-action! wire action) ((wire 'add-action!) action))
+(define (probe name wire)
+  (add-action! wire
+               (lambda ()
+                 (printf "t = ~v, ~v = ~v\n"
+                         (current-time the-agenda)
+                         name
+                         (get-signal wire)))))
 
 (define (inverter input output)
   (define (invert-input)
@@ -137,7 +146,6 @@
         (lambda ()
           (set-signal! o new-val)
           (timer-action)))))
-  (add-action! timer-action)
   'ok)
 
 ; LOGIC FUNCS
@@ -222,6 +230,16 @@
         (fst-item)
         (remove-first-agenda-item! the-agenda)
         (propagate))))
+(define propagate-coro
+  (let ([n 2])
+    (define (iter i)
+      (when (and (< i n) (not (empty-agenda? the-agenda)))
+        (let ([fst-item (first-agenda-item the-agenda)])
+          (fst-item)
+          (remove-first-agenda-item! the-agenda)
+          (coro-yield)
+          (iter (+ i 1)))))
+    (make-coro ((iter 0)))))
 
 (define (make-time-segment time queue) (cons time queue))
 (define (segment-time s) (car s))

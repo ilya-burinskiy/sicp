@@ -142,10 +142,11 @@
   (define (timer-action)
     (let ([new-val (if (= (get-signal o) 0) 1 0)])
       (after-delay
-        (+ (current-time the-agenda) period)
+        period
         (lambda ()
           (set-signal! o new-val)
           (timer-action)))))
+  (timer-action)
   'ok)
 
 ; LOGIC FUNCS
